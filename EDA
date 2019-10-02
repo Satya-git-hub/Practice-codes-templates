@@ -1,0 +1,54 @@
+#Exploratory data analysis
+
+import pandas as pd 
+data = pd.read_csv("D:/IT DOCxxx/datasets/winequality-white.csv",sep=';')
+data.head()
+data.tail()
+
+#finding the no of rows and cols
+data.shape
+
+#checking the datatypes and if null values are present or not
+data.info()
+
+#statistics 
+data.describe()
+#for the below three there is a notable difference between 75%tile and max values which suggets that there are extreme outliers in the dataset 
+data['residual sugar'].describe()
+data['total sulfur dioxide'].describe()
+data['free sulfur dioxide'].describe()
+
+#check the property of the targegt 
+data['quality'].unique()
+data.quality.value_counts()
+
+#to check the missing values 
+sns.heatmap(data.isnull(),cbar=False,yticklabels=False,cmap = 'viridis')
+
+#finding the correlated variables
+import seaborn as sns
+
+correlation=data.corr()
+sns.heatmap(correlation,annot=False,cmap = 'viridis')
+
+import matplotlib.pyplot as plt
+%matplotlib inline
+#boxplot shows the distribution of quantitative data 
+#the box shows the quartiles of the dataset while the whiskers shows the resyt of the datset 
+#outliers are either 3XIQR or more above the third qunaitle or 3XIQR or more below the first quatile
+
+l = data.columns.values
+number_of_columns=12
+number_of_rows = len(l)-1/number_of_columns
+plt.figure(figsize=(number_of_columns,5*number_of_rows))
+for i in range(0,len(l)):
+    plt.subplot(number_of_rows + 1,number_of_columns,i+1)
+    sns.set_style('whitegrid')
+    sns.boxplot(data[l[i]],color='green',orient='v')
+    plt.tight_layout()
+
+#distribution graph checks the linearilty of the variables 
+plt.figure(figsize=(2*number_of_columns,5*number_of_rows))
+for i in range(0,len(l)):
+    plt.subplot(number_of_rows + 1,number_of_columns,i+1)
+    sns.distplot(data[l[i]],kde=True) 
